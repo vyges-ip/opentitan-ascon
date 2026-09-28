@@ -28,8 +28,8 @@ module ascon
   output edn_pkg::edn_req_t edn_o,
   input  edn_pkg::edn_rsp_t edn_i,
 
-  // Key manager (keymgr) key sideload interface
-  input  keymgr_pkg::hw_key_req_t keymgr_key_i,
+  // Key manager (keymgr_dpe) key sideload interface
+  input  keymgr_dpe_pkg::hw_key_req_t keymgr_key_i,
 
   // Bus Interface
   input  tlul_pkg::tl_h2d_t tl_i,
@@ -148,5 +148,16 @@ module ascon
       .alert_tx_o    ( alert_tx_o[i] )
     );
   end
+
+  ////////////////
+  // Assertions //
+  ////////////////
+
+  // All outputs should have a known value after reset
+  `ASSERT_KNOWN(IdleKnown, idle_o)
+  `ASSERT_KNOWN(EdnReqKnown, edn_o)
+  `ASSERT_KNOWN(TlODValidKnown, tl_o.d_valid)
+  `ASSERT_KNOWN(TlOAReadyKnown, tl_o.a_ready)
+  `ASSERT_KNOWN(AlertTxKnown, alert_tx_o)
 
 endmodule
